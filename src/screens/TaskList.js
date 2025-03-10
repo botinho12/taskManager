@@ -3,17 +3,24 @@ import { View, Text, ImageBackground, StyleSheet, TouchableOpacity } from "react
 import moment from 'moment-timezone'
 import 'moment/locale/pt-br'
 
-import icon from 'react-native-vector-icons/FontAwesome'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 import todayImage from '../../assets/imgs/today.jpg'
 
 export default function TaskList() {
 
-    const today = moment().tz("America/Sao_Paulo").locale("pt-br").format('ddd, D [de] MMMM')
+    const today = moment().tz("America/Sao_Paulo")
+        .locale("pt-br").format('ddd, D [de] MMMM')
 
     return(
         <View style={styles.container}>
             <ImageBackground source={todayImage} style={styles.background}>
+
+                <View style={styles.iconBar}>
+                    <TouchableOpacity onPress={() => console.log('oi')}>
+                        <Icon name="eye" size={20} color={'#fff'} />
+                    </TouchableOpacity>
+                </View>
 
                 <View style={styles.titleBar}>
                     <Text style={styles.title}>Hoje</Text>
@@ -22,16 +29,20 @@ export default function TaskList() {
 
             </ImageBackground>
             <View style={styles.taskList}>
-                <Text>Task #01</Text>
+                <Text>Aopaaaa</Text>
             </View>
 
-            <TouchableOpacity style={styles.addButton} activeOpacity={0.7} onPres>
+            <TouchableOpacity style={styles.addButton}
+                activeOpacity={0.7}
+                onPress={() => console.warn("+")}>
+                
+                <Icon name="plus" size={20} color={"#FFF"} />
 
             </TouchableOpacity>
+
         </View>
     )
 }
-
 const styles = StyleSheet.create({
     container: {
         flex: 1
@@ -57,5 +68,22 @@ const styles = StyleSheet.create({
         fontSize: 20,
         marginLeft: 20,
         marginBottom: 30
+    },
+    addButton: {
+        position: 'absolute',
+        right: 30,
+        bottom: 30,
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        backgroundColor: '#B13844',
+        justifyContent:'center',
+        alignItems:'center'
+    },
+    iconBar:{
+        flexDirection: 'row',
+        marginHorizontal: 20,
+        justifyContent: 'flex-end',
+        marginTop: 20
     }
 })
