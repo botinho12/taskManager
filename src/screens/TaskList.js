@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/FontAwesome'
 import todayImage from '../../assets/imgs/today.jpg'
 import Task from "../components/Task"
 import { useEffect, useState } from "react"
+import AddTask from "./AddTask"
 
 const taskDB = [
     {
@@ -48,7 +49,6 @@ export default function TaskList() {
 
     useEffect(() => {
         filterTasks()
-
     }, [showDoneTasks])
 
     const toggleTask = (taskId) => {
@@ -72,22 +72,27 @@ export default function TaskList() {
 
     const filterTasks = () => {
         let visibleTasks = null
-        if(showDoneTasks){
+
+        if(showDoneTasks) {
             visibleTasks = [...tasks]
-        } else {
-            visibleTasks = tasks.filter(task => task.doneAt === null)
         }
+        else {
+            const pending = task => task.doneAt === null 
+            visibleTasks = tasks.filter(pending)
+        }
+
         setVisibleTasks(visibleTasks)
     }
 
     return(
         <View style={styles.container}>
-            <ImageBackground size={30} source={todayImage} style={styles.background}>
+            <AddTask />
+            <ImageBackground source={todayImage} style={styles.background}>
 
                 <View style={styles.iconBar}>
                     <TouchableOpacity onPress={toggleFilter}>
-                        <Icon name={showDoneTasks ? "eye" : "eye-slash"} 
-                          size={20} color={'#fff'} />
+                        <Icon name={showDoneTasks ? "eye" : "eye-slash"}
+                         size={20} color={'#fff'} />
                     </TouchableOpacity>
                 </View>
 
@@ -122,8 +127,7 @@ const styles = StyleSheet.create({
         flex: 1
     },
     background: {
-        flex: 3,
-
+        flex: 3
     },
     taskList: {
         flex: 7

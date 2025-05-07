@@ -1,35 +1,28 @@
-import { Modal, TouchableWithoutFeedback, View, StyleSheet, Text, TextInput, TouchableOpacity } from "react-native";
+import { Modal, StyleSheet, TouchableWithoutFeedback, Text, View, TextInput, TouchableOpacity } from "react-native";
 
 export default function AddTask() {
-    return (
+    return(
         <Modal transparent={true} visible={true} onRequestClose={() => console.warn('fechou')} animationType="slide">
+                <TouchableWithoutFeedback onPress={() => console.warn('fechou')}>
+                    <View style={styles.background}></View>
+                </TouchableWithoutFeedback>
 
-            <TouchableWithoutFeedback
-                onPress={() => console.warn('fechou')}>
-                <View style={styles.background}></View>
-            </TouchableWithoutFeedback>
-
-            <View style={styles.container}>
-                <Text style={styles.header}>Nova Tarefa</Text>
-                <TextInput
-                    style={styles.input}
-                    placehoulder="Informe a descrição"
-                    onChange={() => console.warn('digitou')}
-                    value={''} />
-                <View style={styles.buttons}>
-                    <TouchableOpacity>
-                        <Text style={styles.button}>Cancelar</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity>
-                        <Text style={styles.button}>Salvar</Text>
-                    </TouchableOpacity>
+                <View style={styles.container}>
+                    <Text style={styles.header}>Nova Tarefa</Text>
+                    <TextInput style={styles.input} placeholder="Informe a descrição" onChange={() => console.warn('digitou')} value={''} />
+                    <View style={styles.buttons}>
+                        <TouchableOpacity>
+                            <Text style={styles.button}>Cancelar</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity>
+                            <Text style={styles.button}>Salvar</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </View>
 
-            <TouchableWithoutFeedback
-                onPress={() => console.warn('fechou')}>
-                <View style={styles.background}></View>
-            </TouchableWithoutFeedback>
+                <TouchableWithoutFeedback onPress={() => console.warn('fechou')}>
+                    <View style={styles.background}></View>
+                </TouchableWithoutFeedback>
         </Modal>
     )
 }
@@ -54,7 +47,6 @@ const styles = StyleSheet.create({
         height: 40,
         margin: 15,
         backgroundColor: '#fff',
-        borderWidth: 1,
         borderColor: '#e3e3e3',
         borderRadius: 6
     },
@@ -64,7 +56,7 @@ const styles = StyleSheet.create({
     },
     button: {
         margin: 20,
-        marginRight: 20,
+        marginRight: 30,
         color: '#b13b44'
     }
-})
+});
