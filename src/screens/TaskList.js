@@ -1,4 +1,12 @@
-import { View, Text, ImageBackground, StyleSheet, TouchableOpacity, FlatList } from "react-native"
+import { 
+    View, 
+    Text, 
+    ImageBackground, 
+    StyleSheet, 
+    TouchableOpacity, 
+    FlatList,
+    Alert
+} from "react-native"
 
 import moment from 'moment-timezone'
 import 'moment/locale/pt-br'
@@ -46,10 +54,12 @@ export default function TaskList() {
 
     const[visibleTasks, setVisibleTasks] = useState([...tasks])
     const[showDoneTasks, setShowDoneTasks] = useState(true)
+    const[showAddTask, setShowAddTask] = useState(false)
 
     useEffect(() => {
         filterTasks()
-    }, [showDoneTasks])
+
+    }, [showDoneTasks, tasks])
 
     const toggleTask = (taskId) => {
         const taskList = [...visibleTasks]
@@ -72,27 +82,49 @@ export default function TaskList() {
 
     const filterTasks = () => {
         let visibleTasks = null
-
-        if(showDoneTasks) {
+        if(showDoneTasks){
             visibleTasks = [...tasks]
+        } else {
+            visibleTasks = tasks.filter(task => task.doneAt === null)
         }
-        else {
-            const pending = task => task.doneAt === null 
-            visibleTasks = tasks.filter(pending)
+        setVisibleTasks(visibleTasks)
+    }
+
+    const addTask = newTask => {
+
+        console.warn(newTask)
+        
+        if(!newTask.desc || !newTask.desc.trim()){
+            Alert.alert('Dados inválidos', 'Descrição não informada!')
+            return
         }
 
-        setVisibleTasks(visibleTasks)
+        const tempTasks = [...tasks]
+        tempTasks.push({
+            id: Math.random(),
+            desc: newTask.desc,
+            estimateAt: newTask.date,
+            doneAt: null
+        })
+
+        setTasks(tempTasks)
+        setShowAddTask(false)
     }
 
     return(
         <View style={styles.container}>
-            <AddTask />
-            <ImageBackground source={todayImage} style={styles.background}>
+
+            <AddTask isVisible={showAddTask} 
+                onCancel={() => setShowAddTask(false)}
+                onSave={addTask}
+            />
+            
+            <ImageBackground size={30} source={todayImage} style={styles.background}>
 
                 <View style={styles.iconBar}>
                     <TouchableOpacity onPress={toggleFilter}>
-                        <Icon name={showDoneTasks ? "eye" : "eye-slash"}
-                         size={20} color={'#fff'} />
+                        <Icon name={showDoneTasks ? "eye" : "eye-slash"} 
+                          size={20} color={'#fff'} />
                     </TouchableOpacity>
                 </View>
 
@@ -113,7 +145,7 @@ export default function TaskList() {
 
             <TouchableOpacity style={styles.addButton}
                 activeOpacity={0.7}
-                onPress={() => console.warn("+")}>
+                onPress={() => setShowAddTask(true)}>
                 
                 <Icon name="plus" size={20} color={"#fff"} />
 
@@ -127,7 +159,8 @@ const styles = StyleSheet.create({
         flex: 1
     },
     background: {
-        flex: 3
+        flex: 3,
+
     },
     taskList: {
         flex: 7
