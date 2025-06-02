@@ -17,14 +17,17 @@ export default props => {
     const getRightContent = () => {
         return (
             <TouchableOpacity style={styles.right}
-                onPress={() => props.onDelete && props.onDelete(props.id)}>
+                onPress={() => props.onDelete && props.onDelete(props.id)} >
                 <Icon name="trash" size={30} color="#fff" />
             </TouchableOpacity>
         )
     }
 
     return (
-        <Swipeable renderRightActions={getRightContent}>
+        <Swipeable 
+            renderRightActions={getRightContent}
+        >
+
             <View style={styles.container}>
                 <TouchableWithoutFeedback onPress={() => props.onToggleTask(props.id)}>
                     <View style={styles.checkContainer}>
@@ -36,6 +39,7 @@ export default props => {
                     <Text style={styles.date}>{formattedDate}</Text>
                 </View>
             </View>
+
         </Swipeable>
     )
 }

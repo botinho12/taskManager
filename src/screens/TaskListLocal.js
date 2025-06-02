@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
-import {
-    View,
-    Text,
-    ImageBackground,
-    StyleSheet,
-    TouchableOpacity,
+import { 
+    View, 
+    Text, 
+    ImageBackground, 
+    StyleSheet, 
+    TouchableOpacity, 
     FlatList,
     Alert
 } from "react-native"
@@ -13,8 +13,6 @@ import moment from 'moment-timezone'
 import 'moment/locale/pt-br'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import axios from "axios"
-
 
 import todayImage from '../../assets/imgs/today.jpg'
 import Task from "../components/Task"
@@ -47,7 +45,7 @@ const taskDB = [
     }
 ]
 
-export default function TaskList() {
+export default function TaskListLocal() {
 
     const today = moment().tz("America/Sao_Paulo")
         .locale("pt-br").format('ddd, D [de] MMMM')
@@ -61,7 +59,7 @@ export default function TaskList() {
     const [contador, setContador] = useState(0)
 
     useEffect(() => {
-        if (contador == 0) {
+        if(contador == 0){
             getTasks()
         }
         setContador(contador + 1)
@@ -74,14 +72,10 @@ export default function TaskList() {
     }, [tasks])
 
     async function getTasks() {
-        try {
-            const response = await axios.get('https://683e28c01cd60dca33da977c.mockapi.io/tasks')
-            setTasks(response.data)
-        } 
-        catch (erro) {
-            console.error('Erro ao carregar os dados', erro)
-        }
-
+        const tasksString = await AsyncStorage.getItem('tasksState')
+        console.warn(tasksString)
+        const tasks = tasksString && JSON.parse(tasksString) || []
+        setTasks(tasks)
     }
 
     const toggleTask = (taskId) => {
@@ -89,7 +83,7 @@ export default function TaskList() {
 
         for (let i = 0; i < taskList.length; i++) {
             const task = taskList[i];
-            if (task.id === taskId) {
+            if(task.id === taskId){
                 task.doneAt = task.doneAt ? null : new Date()
                 break
             }
@@ -105,7 +99,7 @@ export default function TaskList() {
 
     const filterTasks = () => {
         let visibleTasks = null
-        if (showDoneTasks) {
+        if(showDoneTasks){
             visibleTasks = [...tasks]
         } else {
             visibleTasks = tasks.filter(task => task.doneAt === null)
@@ -114,8 +108,8 @@ export default function TaskList() {
     }
 
     const addTask = newTask => {
-
-        if (!newTask.desc || !newTask.desc.trim()) {
+      
+        if(!newTask.desc || !newTask.desc.trim()){
             Alert.alert('Dados inválidos', 'Descrição não informada!')
             return
         }
@@ -132,31 +126,31 @@ export default function TaskList() {
         setShowAddTask(false)
 
         AsyncStorage.setItem('tasksState', JSON.stringify(tempTasks))
-
+        
     }
-
+    
     const deleteTask = id => {
         const tempTasks = tasks.filter(task => task.id !== id)
         setTasks(tempTasks)
-
+        
         AsyncStorage.setItem('tasksState', JSON.stringify(tempTasks))
 
     }
-
-    return (
+    
+    return(
         <View style={styles.container}>
 
-            <AddTask isVisible={showAddTask}
+            <AddTask isVisible={showAddTask} 
                 onCancel={() => setShowAddTask(false)}
                 onSave={addTask}
             />
-
+            
             <ImageBackground size={30} source={todayImage} style={styles.background}>
 
                 <View style={styles.iconBar}>
                     <TouchableOpacity onPress={toggleFilter}>
-                        <Icon name={showDoneTasks ? "eye" : "eye-slash"}
-                            size={20} color={'#fff'} />
+                        <Icon name={showDoneTasks ? "eye" : "eye-slash"} 
+                          size={20} color={'#fff'} />
                     </TouchableOpacity>
                 </View>
 
@@ -168,20 +162,20 @@ export default function TaskList() {
             </ImageBackground>
 
             <View style={styles.taskList}>
-                <FlatList
+                <FlatList 
                     data={visibleTasks}
                     keyExtractor={item => `${item.id}`}
-                    renderItem={({ item }) =>
-                        <Task {...item}
-                            onToggleTask={toggleTask}
-                            onDelete={deleteTask} />}
+                    renderItem={({item}) => 
+                        <Task {...item} 
+                            onToggleTask={toggleTask} 
+                            onDelete={deleteTask}/>}
                 />
             </View>
 
             <TouchableOpacity style={styles.addButton}
                 activeOpacity={0.7}
                 onPress={() => setShowAddTask(true)}>
-
+                
                 <Icon name="plus" size={20} color={"#fff"} />
 
             </TouchableOpacity>
@@ -199,7 +193,7 @@ const styles = StyleSheet.create({
     },
     taskList: {
         flex: 7
-    },
+    }, 
     titleBar: {
         flex: 1,
         justifyContent: 'flex-end'
