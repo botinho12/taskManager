@@ -122,6 +122,8 @@ export default function TaskList() {
         setVisibleTasks(visibleTasks)
     }
 
+    
+
     const addTask = async newTask => {
 
         if (!newTask.desc || !newTask.desc.trim()) {
